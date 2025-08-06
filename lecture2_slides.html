@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture 2: Database Design & PostgreSQL Setup</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: #333;
+        }
+
+        .slide-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .slide {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: none;
+            min-height: 600px;
+            position: relative;
+        }
+
+        .slide.active {
+            display: block;
+            animation: slideIn 0.5s ease-in-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            color: #4facfe;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-align: center;
+            border-bottom: 3px solid #4facfe;
+            padding-bottom: 15px;
+        }
+
+        h2 {
+            color: #00b4db;
+            font-size: 2em;
+            margin-bottom: 20px;
+            border-left: 5px solid #00b4db;
+            padding-left: 15px;
+        }
+
+        h3 {
+            color: #555;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        .three-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            align-items: start;
+        }
+
+        .database-concepts {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .concept-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #e0e6ed;
+            transition: all 0.3s ease;
+        }
+
+        .concept-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .concept-card h4 {
+            color: #4facfe;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+
+        .table-card {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 10px 0;
+            border-left: 5px solid #e17055;
+        }
+
+        .table-card h4 {
+            color: #2d3436;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        ul {
+            font-size: 1.1em;
+            line-height: 1.8;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .sql-diagram {
+            text-align: center;
+            margin: 30px 0;
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #4facfe;
+        }
+
+        .diagram-table {
+            display: inline-block;
+            background: white;
+            border: 2px solid #4facfe;
+            border-radius: 8px;
+            margin: 10px;
+            overflow: hidden;
+        }
+
+        .table-header {
+            background: #4facfe;
+            color: white;
+            padding: 10px 20px;
+            font-weight: bold;
+        }
+
+        .table-row {
+            padding: 8px 20px;
+            border-bottom: 1px solid #eee;
+            text-align: left;
+        }
+
+        .relationship-arrow {
+            font-size: 2em;
+            color: #00b4db;
+            margin: 0 10px;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: #4facfe;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            margin: 0 5px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: #00b4db;
+            transform: translateY(-2px);
+        }
+
+        .nav-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .slide-counter {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: rgba(79, 172, 254, 0.9);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            z-index: 1000;
+        }
+
+        .slide-number {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            background: #4facfe;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #a8edea 0%, #fed6e3 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #4facfe;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+            font-size: 0.95em;
+        }
+
+        .sql-keyword {
+            color: #66d9ef;
+            font-weight: bold;
+        }
+
+        .sql-string {
+            color: #a6e22e;
+        }
+
+        .sql-comment {
+            color: #75715e;
+            font-style: italic;
+        }
+
+        .timeline {
+            margin: 20px 0;
+        }
+
+        .timeline-item {
+            background: #f8f9ff;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #4facfe;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .timeline-time {
+            font-weight: bold;
+            color: #00b4db;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            border: 2px solid #e17055;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .warning-box strong {
+            color: #d63031;
+        }
+
+        .success-box {
+            background: linear-gradient(135deg, #a8e6cf 0%, #81c784 100%);
+            border: 2px solid #4caf50;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .er-diagram {
+            background: white;
+            border: 2px solid #4facfe;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .entity-box {
+            display: inline-block;
+            background: #e3f2fd;
+            border: 2px solid #2196f3;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px;
+            min-width: 120px;
+        }
+
+        .entity-title {
+            font-weight: bold;
+            color: #1976d2;
+            border-bottom: 1px solid #2196f3;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+
+        .entity-field {
+            font-size: 0.9em;
+            color: #424242;
+            text-align: left;
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 20px;
+                margin-bottom: 15px;
+            }
+
+            .two-column,
+            .three-column {
+                grid-template-columns: 1fr;
+            }
+
+            .database-concepts {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            h2 {
+                font-size: 1.5em;
+            }
+
+            .code-block {
+                font-size: 0.8em;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="slide-container">
+        <!-- Slide 1: Title Slide -->
+        <div class="slide active">
+            <div class="slide-number">1/14</div>
+            <h1>Database Design & PostgreSQL Setup</h1>
+            <div style="text-align: center; margin-top: 50px;">
+                <h2 style="border: none; color: #00b4db;">Building the Data Foundation</h2>
+                <div style="font-size: 1.3em; margin: 40px 0; color: #666;">
+                    <strong>Lecture 2:</strong> Application Development for BIT Students<br>
+                    <strong>Focus:</strong> Relational Database Design & PostgreSQL<br>
+                    <strong>Duration:</strong> 1.5 hours
+                </div>
+                <div class="highlight">
+                    <h3>Today's Learning Objectives:</h3>
+                    <ul style="text-align: left; display: inline-block;">
+                        <li>Understand relational database concepts</li>
+                        <li>Learn database design principles</li>
+                        <li>Master PostgreSQL basics</li>
+                        <li>Design job portal database schema</li>
+                        <li>Create tables with relationships</li>
+                        <li>Insert and query sample data</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Why Do We Need Databases? -->
+        <div class="slide">
+            <div class="slide-number">2/14</div>
+            <h1>Why Do We Need Databases?</h1>
+            <div class="two-column">
+                <div>
+                    <h3>🤔 Imagine Without Databases...</h3>
+                    <ul>
+                        <li><strong>📁 File Storage:</strong> Scattered text files</li>
+                        <li><strong>🔍 Finding Data:</strong> Manual searching</li>
+                        <li><strong>👥 Multiple Users:</strong> File conflicts</li>
+                        <li><strong>🔒 Security:</strong> No access control</li>
+                        <li><strong>💾 Backup:</strong> Manual copying</li>
+                        <li><strong>🔗 Relationships:</strong> Hard to maintain</li>
+                    </ul>
+
+                    <div class="warning-box">
+                        <strong>Real Problem:</strong> A job portal with 1000s of users and jobs stored in text files
+                        would be a nightmare to manage!
+                    </div>
+                </div>
+                <div>
+                    <h3>✅ Database Benefits</h3>
+                    <ul>
+                        <li><strong>🎯 Organized Storage:</strong> Structured data</li>
+                        <li><strong>⚡ Fast Queries:</strong> Instant data retrieval</li>
+                        <li><strong>🔐 Security:</strong> User permissions & encryption</li>
+                        <li><strong>🔄 Concurrent Access:</strong> Multiple users safely</li>
+                        <li><strong>💪 Data Integrity:</strong> Prevents corruption</li>
+                        <li><strong>📊 Relationships:</strong> Connect related data</li>
+                        <li><strong>🔙 Backup & Recovery:</strong> Automated systems</li>
+                    </ul>
+
+                    <div class="success-box">
+                        <strong>Database Solution:</strong> Efficient, secure, and scalable data management for any size
+                        application!
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Relational Database Concepts -->
+        <div class="slide">
+            <div class="slide-number">3/14</div>
+            <h1>Relational Database Concepts</h1>
+
+            <div class="database-concepts">
+                <div class="concept-card">
+                    <h4>🗃️ Table</h4>
+                    <p>Collection of related data organized in rows and columns</p>
+                    <p><strong>Example:</strong> Users table with user information</p>
+                </div>
+
+                <div class="concept-card">
+                    <h4>📊 Row (Record)</h4>
+                    <p>Single entry in a table containing all data for one item</p>
+                    <p><strong>Example:</strong> One user's complete information</p>
+                </div>
+
+                <div class="concept-card">
+                    <h4>📋 Column (Field)</h4>
+                    <p>Specific attribute or property of the data</p>
+                    <p><strong>Example:</strong> name, email, password columns</p>
+                </div>
+
+                <div class="concept-card">
+                    <h4>🔑 Primary Key</h4>
+                    <p>Unique identifier for each row in a table</p>
+                    <p><strong>Example:</strong> user_id (1, 2, 3, 4...)</p>
+                </div>
+
+                <div class="concept-card">
+                    <h4>🔗 Foreign Key</h4>
+                    <p>Reference to primary key in another table</p>
+                    <p><strong>Example:</strong> job application references user_id</p>
+                </div>
+
+                <div class="concept-card">
+                    <h4>📐 Relationships</h4>
+                    <p>How tables are connected to each other</p>
+                    <p><strong>Types:</strong> One-to-One, One-to-Many, Many-to-Many</p>
+                </div>
+            </div>
+
+            <div class="highlight">
+                <h3>🎯 Real-World Analogy: Library System</h3>
+                <ul>
+                    <li><strong>Table = Card Catalog:</strong> Organized information storage</li>
+                    <li><strong>Row = Individual Card:</strong> One book's information</li>
+                    <li><strong>Column = Category:</strong> Title, Author, ISBN</li>
+                    <li><strong>Primary Key = ISBN:</strong> Unique book identifier</li>
+                    <li><strong>Foreign Key = Author ID:</strong> Links to Authors table</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 4: Database Relationships -->
+        <div class="slide">
+            <div class="slide-number">4/14</div>
+            <h1>Understanding Database Relationships</h1>
+
+            <div class="three-column">
+                <div>
+                    <h3>1️⃣ One-to-One (1:1)</h3>
+                    <div class="concept-card">
+                        <p><strong>Definition:</strong> Each record in Table A relates to exactly one record in Table B
+                        </p>
+                        <p><strong>Example:</strong> User ↔ User Profile</p>
+                        <p><strong>Use Case:</strong> Additional optional information</p>
+                    </div>
+                </div>
+
+                <div>
+                    <h3>1️⃣ One-to-Many (1:N)</h3>
+                    <div class="concept-card" style="background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);">
+                        <p><strong>Definition:</strong> Each record in Table A can relate to multiple records in Table B
+                        </p>
+                        <p><strong>Example:</strong> User → Multiple Job Applications</p>
+                        <p><strong>Most Common!</strong> 80% of relationships</p>
+                    </div>
+                </div>
+
+                <div>
+                    <h3>🔄 Many-to-Many (N:M)</h3>
+                    <div class="concept-card">
+                        <p><strong>Definition:</strong> Multiple records in Table A relate to multiple records in Table
+                            B</p>
+                        <p><strong>Example:</strong> Jobs ↔ Skills (requires junction table)</p>
+                        <p><strong>Implementation:</strong> Needs intermediate table</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="er-diagram">
+                <h3>Job Portal Relationships Example:</h3>
+                <div style="margin: 20px 0;">
+                    <div class="entity-box">
+                        <div class="entity-title">Users</div>
+                        <div class="entity-field">id (PK)<br>email<br>name<br>user_type</div>
+                    </div>
+                    <span class="relationship-arrow">1 → N</span>
+                    <div class="entity-box">
+                        <div class="entity-title">Applications</div>
+                        <div class="entity-field">id (PK)<br>user_id (FK)<br>job_id (FK)<br>status</div>
+                    </div>
+                    <span class="relationship-arrow">N ← 1</span>
+                    <div class="entity-box">
+                        <div class="entity-title">Jobs</div>
+                        <div class="entity-field">id (PK)<br>title<br>company<br>posted_by (FK)</div>
+                    </div>
+                </div>
+                <p style="color: #666; font-size: 0.9em;">One user can have many applications, one job can have many
+                    applications</p>
+            </div>
+        </div>
+
+        <!-- Slide 5: PostgreSQL Introduction -->
+        <div class="slide">
+            <div class="slide-number">5/14</div>
+            <h1>PostgreSQL Introduction</h1>
+            <div class="two-column">
+                <div>
+                    <h3>🐘 What is PostgreSQL?</h3>
+                    <ul>
+                        <li><strong>Open Source:</strong> Free and community-driven</li>
+                        <li><strong>ACID Compliant:</strong> Reliable transactions</li>
+                        <li><strong>SQL Standard:</strong> Uses standard SQL syntax</li>
+                        <li><strong>Extensible:</strong> Custom functions and data types</li>
+                        <li><strong>Robust:</strong> Handles large amounts of data</li>
+                    </ul>
+
+                    <h3>🏢 Who Uses PostgreSQL?</h3>
+                    <div class="concept-card">
+                        <ul style="text-align: left;">
+                            <li><strong>Apple:</strong> Core infrastructure</li>
+                            <li><strong>Netflix:</strong> Analytics and recommendations</li>
+                            <li><strong>Instagram:</strong> Photo metadata storage</li>
+                            <li><strong>Spotify:</strong> User data and playlists</li>
+                            <li><strong>Reddit:</strong> Comment and post storage</li>
+                        </ul>
+                    </div>
+                </div>
+                <div>
+                    <h3>🆚 PostgreSQL vs Others</h3>
+                    <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+                        <tr style="background: #4facfe; color: white;">
+                            <th style="padding: 10px; border: 1px solid #ddd;">Database</th>
+                            <th style="padding: 10px; border: 1px solid #ddd;">Best For</th>
+                            <th style="padding: 10px; border: 1px solid #ddd;">Cost</th>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #ddd;"><strong>PostgreSQL</strong></td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">Complex queries, reliability</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">Free</td>
+                        </tr>
+                        <tr style="background: #f5f5f5;">
+                            <td style="padding: 8px; border: 1px solid #ddd;">MySQL</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">Web applications, speed</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">Free</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #ddd;">Oracle</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">Enterprise applications</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">Expensive</td>
+                        </tr>
+                        <tr style="background: #f5f5f5;">
+                            <td style="padding: 8px; border: 1px solid #ddd;">SQLite</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">Mobile apps, embedded</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">Free</td>
+                        </tr>
+                    </table>
+
+                    <div class="highlight">
+                        <strong>Why PostgreSQL for Our Project?</strong>
+                        <ul>
+                            <li>Professional-grade features</li>
+                            <li>Excellent learning platform</li>
+                            <li>Industry-standard skills</li>
+                            <li>Great documentation</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Job Portal Database Design -->
+        <div class="slide">
+            <div class="slide-number">6/14</div>
+            <h1>Job Portal Database Schema Design</h1>
+
+            <div class="highlight">
+                <h3>📋 Requirements Analysis</h3>
+                <p><strong>What data do we need to store?</strong></p>
+                <ul>
+                    <li><strong>Users:</strong> Admins and Job Seekers with authentication</li>
+                    <li><strong>Jobs:</strong> Job postings with details and company info</li>
+                    <li><strong>Applications:</strong> Who applied to which job and when</li>
+                </ul>
+            </div>
+
+            <div class="three-column">
+                <div class="table-card">
+                    <h4>👤 Users Table</h4>
+                    <div class="entity-field">
+                        <strong>id:</strong> SERIAL PRIMARY KEY<br>
+                        <strong>email:</strong> VARCHAR(255) UNIQUE<br>
+                        <strong>password:</strong> VARCHAR(255) (hashed)<br>
+                        <strong>full_name:</strong> VARCHAR(255)<br>
+                        <strong>user_type:</strong> VARCHAR(20)<br>
+                        <strong>created_at:</strong> TIMESTAMP
+                    </div>
+                    <p><strong>Purpose:</strong> Store user accounts and authentication info</p>
+                </div>
+
+                <div class="table-card">
+                    <h4>💼 Jobs Table</h4>
+                    <div class="entity-field">
+                        <strong>id:</strong> SERIAL PRIMARY KEY<br>
+                        <strong>title:</strong> VARCHAR(255)<br>
+                        <strong>description:</strong> TEXT<br>
+                        <strong>company:</strong> VARCHAR(255)<br>
+                        <strong>location:</strong> VARCHAR(255)<br>
+                        <strong>salary_range:</strong> VARCHAR(100)<br>
+                        <strong>posted_by:</strong> INTEGER (FK → users.id)<br>
+                        <strong>created_at:</strong> TIMESTAMP
+                    </div>
+                    <p><strong>Purpose:</strong> Store job postings and details</p>
+                </div>
+
+                <div class="table-card">
+                    <h4>📝 Applications Table</h4>
+                    <div class="entity-field">
+                        <strong>id:</strong> SERIAL PRIMARY KEY<br>
+                        <strong>job_id:</strong> INTEGER (FK → jobs.id)<br>
+                        <strong>applicant_id:</strong> INTEGER (FK → users.id)<br>
+                        <strong>cover_letter:</strong> TEXT<br>
+                        <strong>status:</strong> VARCHAR(20)<br>
+                        <strong>applied_at:</strong> TIMESTAMP
+                    </div>
+                    <p><strong>Purpose:</strong> Track job applications and their status</p>
+                </div>
+            </div>
+
+            <div class="er-diagram">
+                <h3>🔗 Relationships Summary:</h3>
+                <p><strong>Users (1) → Jobs (N):</strong> One admin can post many jobs</p>
+                <p><strong>Users (1) → Applications (N):</strong> One job seeker can apply to many jobs</p>
+                <p><strong>Jobs (1) → Applications (N):</strong> One job can have many applications</p>
+            </div>
+        </div>
+
+        <!-- Slide 7: SQL Basics -->
+        <div class="slide">
+            <div class="slide-number">7/14</div>
+            <h1>SQL Basics - The Language of Databases</h1>
+
+            <div class="two-column">
+                <div>
+                    <h3>📝 What is SQL?</h3>
+                    <ul>
+                        <li><strong>S</strong>tructured <strong>Q</strong>uary <strong>L</strong>anguage</li>
+                        <li>Standard language for relational databases</li>
+                        <li>Used to create, read, update, delete data</li>
+                        <li>Declarative language (what, not how)</li>
+                    </ul>
+
+                    <h3>🎯 Main SQL Categories</h3>
+                    <div class="concept-card">
+                        <h4>DDL - Data Definition Language</h4>
+                        <p>Structure operations: CREATE, ALTER, DROP</p>
+                    </div>
+                    <div class="concept-card">
+                        <h4>DML - Data Manipulation Language</h4>
+                        <p>Data operations: INSERT, UPDATE, DELETE</p>
+                    </div>
+                    <div class="concept-card">
+                        <h4>DQL - Data Query Language</h4>
+                        <p>Data retrieval: SELECT</p>
+                    </div>
+                </div>
+                <div>
+                    <h3>🔧 Basic SQL Commands</h3>
+                    <div class="code-block">
+                        <span class="sql-comment">-- Create a table</span>
+                        <span class="sql-keyword">CREATE TABLE</span> users (
+                        id <span class="sql-keyword">SERIAL PRIMARY KEY</span>,
+                        email <span class="sql-keyword">VARCHAR</span>(255) <span class="sql-keyword">NOT NULL</span>
+                        );
+
+                        <span class="sql-comment">-- Insert data</span>
+                        <span class="sql-keyword">INSERT INTO</span> users (email)
+                        <span class="sql-keyword">VALUES</span> (<span class="sql-string">'john@example.com'</span>);
+
+                        <span class="sql-comment">-- Select data</span>
+                        <span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> users;
+
+                        <span class="sql-comment">-- Update data</span>
+                        <span class="sql-keyword">UPDATE</span> users
+                        <span class="sql-keyword">SET</span> email = <span
+                            class="sql-string">'newemail@example.com'</span>
+                        <span class="sql-keyword">WHERE</span> id = 1;
+
+                        <span class="sql-comment">-- Delete data</span>
+                        <span class="sql-keyword">DELETE FROM</span> users
+                        <span class="sql-keyword">WHERE</span> id = 1;
+                    </div>
+
+                    <div class="warning-box">
+                        <strong>⚠️ Important:</strong> Always use WHERE clause with UPDATE and DELETE to avoid modifying
+                        all records!
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: PostgreSQL Setup and Connection -->
+        <div class="slide">
+            <div class="slide-number">8/14</div>
+            <h1>PostgreSQL Setup & Connection</h1>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-time">Step 3: Create Database</div>
+                    <div class="code-block">
+                        <span class="sql-comment">-- Create our job portal database</span>
+                        <span class="sql-keyword">CREATE DATABASE</span> job_portal;
+
+                        <span class="sql-comment">-- Connect to the new database</span>
+                        \c job_portal;
+
+                        <span class="sql-comment">-- Check current database</span>
+                        <span class="sql-keyword">SELECT</span> current_database();
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-time">Step 4: Basic PostgreSQL Commands</div>
+                    <div class="code-block">
+                        <span class="sql-comment">-- List all databases</span>
+                        \l
+
+                        <span class="sql-comment">-- List all tables</span>
+                        \dt
+
+                        <span class="sql-comment">-- Describe table structure</span>
+                        \d table_name
+
+                        <span class="sql-comment">-- Exit PostgreSQL</span>
+                        \q
+                    </div>
+                </div>
+            </div>
+
+            <div class="success-box">
+                <strong>✅ Success Indicators:</strong>
+                <ul>
+                    <li>You can connect to PostgreSQL without errors</li>
+                    <li>You can create the job_portal database</li>
+                    <li>Commands execute and show expected results</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 9: Creating Users Table -->
+        <div class="slide">
+            <div class="slide-number">9/14</div>
+            <h1>Creating the Users Table</h1>
+
+            <div class="two-column">
+                <div>
+                    <h3>👤 Users Table Design</h3>
+                    <div class="table-card">
+                        <h4>Fields and Data Types:</h4>
+                        <div class="entity-field">
+                            <strong>id:</strong> SERIAL PRIMARY KEY<br>
+                            <small>Auto-incrementing unique identifier</small><br><br>
+
+                            <strong>email:</strong> VARCHAR(255) UNIQUE NOT NULL<br>
+                            <small>User's email address (login credential)</small><br><br>
+
+                            <strong>password:</strong> VARCHAR(255) NOT NULL<br>
+                            <small>Encrypted password hash</small><br><br>
+
+                            <strong>full_name:</strong> VARCHAR(255) NOT NULL<br>
+                            <small>User's display name</small><br><br>
+
+                            <strong>user_type:</strong> VARCHAR(20) CHECK(...)<br>
+                            <small>Either 'admin' or 'jobseeker'</small><br><br>
+
+                            <strong>created_at:</strong> TIMESTAMP DEFAULT CURRENT_TIMESTAMP<br>
+                            <small>Account creation timestamp</small>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h3>🔧 SQL Implementation</h3>
+                    <div class="code-block">
+                        <span class="sql-keyword">CREATE TABLE</span> users (
+                        id <span class="sql-keyword">SERIAL PRIMARY KEY</span>,
+                        email <span class="sql-keyword">VARCHAR</span>(255) <span class="sql-keyword">UNIQUE NOT
+                            NULL</span>,
+                        password <span class="sql-keyword">VARCHAR</span>(255) <span class="sql-keyword">NOT
+                            NULL</span>,
+                        full_name <span class="sql-keyword">VARCHAR</span>(255) <span class="sql-keyword">NOT
+                            NULL</span>,
+                        user_type <span class="sql-keyword">VARCHAR</span>(20)
+                        <span class="sql-keyword">CHECK</span> (user_type <span class="sql-keyword">IN</span> (<span
+                            class="sql-string">'admin'</span>, <span class="sql-string">'jobseeker'</span>))
+                        <span class="sql-keyword">NOT NULL</span>,
+                        created_at <span class="sql-keyword">TIMESTAMP DEFAULT CURRENT_TIMESTAMP</span>
+                        );
+                    </div>
+
+                    <h3>🎯 Key Features Explained</h3>
+                    <ul>
+                        <li><strong>SERIAL:</strong> Auto-incrementing integer</li>
+                        <li><strong>UNIQUE:</strong> No duplicate emails allowed</li>
+                        <li><strong>CHECK:</strong> Validates user_type values</li>
+                        <li><strong>DEFAULT:</strong> Automatically sets timestamp</li>
+                        <li><strong>NOT NULL:</strong> Field must have a value</li>
+                    </ul>
+
+                    <div class="warning-box">
+                        <strong>⚠️ Security Note:</strong> Never store plain text passwords! We'll use bcrypt hashing in
+                        Node.js.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Creating Jobs Table -->
+        <div class="slide">
+            <div class="slide-number">10/14</div>
+            <h1>Creating the Jobs Table</h1>
+
+            <div class="code-block">
+                <span class="sql-keyword">CREATE TABLE</span> jobs (
+                id <span class="sql-keyword">SERIAL PRIMARY KEY</span>,
+                title <span class="sql-keyword">VARCHAR</span>(255) <span class="sql-keyword">NOT NULL</span>,
+                description <span class="sql-keyword">TEXT NOT NULL</span>,
+                company <span class="sql-keyword">VARCHAR</span>(255) <span class="sql-keyword">NOT NULL</span>,
+                location <span class="sql-keyword">VARCHAR</span>(255),
+                salary_range <span class="sql-keyword">VARCHAR</span>(100),
+                posted_by <span class="sql-keyword">INTEGER REFERENCES</span> users(id) <span class="sql-keyword">ON
+                    DELETE CASCADE</span>,
+                created_at <span class="sql-keyword">TIMESTAMP DEFAULT CURRENT_TIMESTAMP</span>
+                );
+            </div>
+
+            <div class="two-column">
+                <div>
+                    <h3>🔗 Foreign Key Relationship</h3>
+                    <div class="concept-card">
+                        <h4>REFERENCES users(id)</h4>
+                        <ul style="text-align: left;">
+                            <li><strong>Purpose:</strong> Links job to the admin who posted it</li>
+                            <li><strong>Constraint:</strong> posted_by must exist in users table</li>
+                            <li><strong>ON DELETE CASCADE:</strong> If user is deleted, their jobs are too</li>
+                        </ul>
+                    </div>
+
+                    <h3>📊 Data Type Choices</h3>
+                    <ul>
+                        <li><strong>TEXT:</strong> For long descriptions (no length limit)</li>
+                        <li><strong>VARCHAR(255):</strong> For shorter text fields</li>
+                        <li><strong>INTEGER:</strong> For foreign key references</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>💡 Design Decisions Explained</h3>
+
+                    <div class="highlight">
+                        <h4>Why VARCHAR for salary_range?</h4>
+                        <p>Flexible format: "₹50,000 - ₹80,000", "Negotiable", "Up to ₹1,00,000"</p>
+                    </div>
+
+                    <div class="highlight">
+                        <h4>Why location is nullable?</h4>
+                        <p>Some jobs might be "Remote" or location TBD</p>
+                    </div>
+
+                    <div class="highlight">
+                        <h4>Why ON DELETE CASCADE?</h4>
+                        <p>If admin account is removed, their job postings should be removed too</p>
+                    </div>
+
+                    <div class="warning-box">
+                        <strong>⚠️ Alternative:</strong> You could use ON DELETE SET NULL to keep jobs but mark
+                        posted_by as NULL
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Creating Applications Table -->
+        <div class="slide">
+            <div class="slide-number">11/14</div>
+            <h1>Creating the Applications Table</h1>
+
+            <div class="code-block">
+                <span class="sql-keyword">CREATE TABLE</span> applications (
+                id <span class="sql-keyword">SERIAL PRIMARY KEY</span>,
+                job_id <span class="sql-keyword">INTEGER REFERENCES</span> jobs(id) <span class="sql-keyword">ON DELETE
+                    CASCADE</span>,
+                applicant_id <span class="sql-keyword">INTEGER REFERENCES</span> users(id) <span class="sql-keyword">ON
+                    DELETE CASCADE</span>,
+                cover_letter <span class="sql-keyword">TEXT</span>,
+                status <span class="sql-keyword">VARCHAR</span>(20) <span class="sql-keyword">DEFAULT</span> <span
+                    class="sql-string">'pending'</span>
+                <span class="sql-keyword">CHECK</span> (status <span class="sql-keyword">IN</span> (<span
+                    class="sql-string">'pending'</span>, <span class="sql-string">'reviewed'</span>, <span
+                    class="sql-string">'accepted'</span>, <span class="sql-string">'rejected'</span>)),
+                applied_at <span class="sql-keyword">TIMESTAMP DEFAULT CURRENT_TIMESTAMP</span>,
+
+                <span class="sql-comment">-- Prevent duplicate applications</span>
+                <span class="sql-keyword">UNIQUE</span>(job_id, applicant_id)
+                );
+            </div>
+
+            <div class="two-column">
+                <div>
+                    <h3>🔗 Multiple Foreign Keys</h3>
+                    <div class="concept-card">
+                        <h4>job_id → jobs(id)</h4>
+                        <p>Which job was applied to</p>
+                    </div>
+                    <div class="concept-card">
+                        <h4>applicant_id → users(id)</h4>
+                        <p>Which user applied</p>
+                    </div>
+
+                    <div class="highlight">
+                        <h4>🎯 Junction Table Pattern</h4>
+                        <p>Applications table serves as a junction between Users and Jobs, enabling many-to-many
+                            relationship with additional data</p>
+                    </div>
+                </div>
+                <div>
+                    <h3>✨ Advanced Features</h3>
+
+                    <div class="success-box">
+                        <h4>UNIQUE(job_id, applicant_id)</h4>
+                        <p><strong>Composite Unique Constraint:</strong> Prevents user from applying to same job twice
+                        </p>
+                    </div>
+
+                    <div class="concept-card">
+                        <h4>Status Workflow</h4>
+                        <ul style="text-align: left;">
+                            <li><strong>pending:</strong> Just applied</li>
+                            <li><strong>reviewed:</strong> Admin has seen it</li>
+                            <li><strong>accepted:</strong> Candidate selected</li>
+                            <li><strong>rejected:</strong> Not selected</li>
+                        </ul>
+                    </div>
+
+                    <div class="warning-box">
+                        <strong>🤔 Question:</strong> What happens if a job seeker tries to apply for the same job
+                        twice?
+                        <br><strong>Answer:</strong> PostgreSQL will return a unique constraint violation error!
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Inserting Sample Data -->
+        <div class="slide">
+            <div class="slide-number">12/14</div>
+            <h1>Inserting Sample Data</h1>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-time">Step 1: Insert Users</div>
+                    <div class="code-block">
+                        <span class="sql-comment">-- Insert admin user</span>
+                        <span class="sql-keyword">INSERT INTO</span> users (email, password, full_name, user_type)
+                        <span class="sql-keyword">VALUES</span> (
+                        <span class="sql-string">'admin@jobportal.com'</span>,
+                        <span class="sql-string">'$2b$10$hashedpassword123'</span>,
+                        <span class="sql-string">'Admin User'</span>,
+                        <span class="sql-string">'admin'</span>
+                        );
+
+                        <span class="sql-comment">-- Insert job seekers</span>
+                        <span class="sql-keyword">INSERT INTO</span> users (email, password, full_name, user_type)
+                        <span class="sql-keyword">VALUES</span>
+                        (<span class="sql-string">'john@example.com'</span>, <span
+                            class="sql-string">'$2b$10$hashed456'</span>, <span class="sql-string">'John Doe'</span>,
+                        <span class="sql-string">'jobseeker'</span>),
+                        (<span class="sql-string">'jane@example.com'</span>, <span
+                            class="sql-string">'$2b$10$hashed789'</span>, <span class="sql-string">'Jane Smith'</span>,
+                        <span class="sql-string">'jobseeker'</span>);
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-time">Step 2: Insert Jobs</div>
+                    <div class="code-block">
+                        <span class="sql-comment">-- Insert job postings (posted_by = 1 is our admin)</span>
+                        <span class="sql-keyword">INSERT INTO</span> jobs (title, description, company, location,
+                        salary_range, posted_by)
+                        <span class="sql-keyword">VALUES</span>
+                        (
+                        <span class="sql-string">'Full Stack Developer'</span>,
+                        <span class="sql-string">'Looking for experienced developer with React and Node.js
+                            skills'</span>,
+                        <span class="sql-string">'Tech Solutions Inc'</span>,
+                        <span class="sql-string">'Kathmandu, Nepal'</span>,
+                        <span class="sql-string">'₹80,000 - ₹1,20,000'</span>,
+                        1
+                        ),
+                        (
+                        <span class="sql-string">'UI/UX Designer'</span>,
+                        <span class="sql-string">'Creative designer needed for mobile and web applications'</span>,
+                        <span class="sql-string">'Design Studio'</span>,
+                        <span class="sql-string">'Pokhara, Nepal'</span>,
+                        <span class="sql-string">'₹60,000 - ₹90,000'</span>,
+                        1
+                        );
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-time">Step 3: Insert Applications</div>
+                    <div class="code-block">
+                        <span class="sql-comment">-- John applies for Full Stack Developer position</span>
+                        <span class="sql-keyword">INSERT INTO</span> applications (job_id, applicant_id, cover_letter)
+                        <span class="sql-keyword">VALUES</span> (
+                        1,
+                        2,
+                        <span class="sql-string">'I am very interested in this position and have 3 years experience with
+                            React and Node.js'</span>
+                        );
+
+                        <span class="sql-comment">-- Jane applies for UI/UX Designer position</span>
+                        <span class="sql-keyword">INSERT INTO</span> applications (job_id, applicant_id, cover_letter)
+                        <span class="sql-keyword">VALUES</span> (
+                        2,
+                        3,
+                        <span class="sql-string">'I have a strong portfolio in mobile and web design with 5 years
+                            experience'</span>
+                        );
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: Querying Data -->
+        <div class="slide">
+            <div class="slide-number">13/14</div>
+            <h1>Querying Our Data</h1>
+
+            <div class="two-column">
+                <div>
+                    <h3>🔍 Basic Queries</h3>
+                    <div class="code-block">
+                        <span class="sql-comment">-- View all users</span>
+                        <span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> users;
+
+                        <span class="sql-comment">-- View only job seekers</span>
+                        <span class="sql-keyword">SELECT</span> full_name, email
+                        <span class="sql-keyword">FROM</span> users
+                        <span class="sql-keyword">WHERE</span> user_type = <span class="sql-string">'jobseeker'</span>;
+
+                        <span class="sql-comment">-- View all jobs</span>
+                        <span class="sql-keyword">SELECT</span> title, company, location
+                        <span class="sql-keyword">FROM</span> jobs;
+
+                        <span class="sql-comment">-- Count applications per job</span>
+                        <span class="sql-keyword">SELECT</span> job_id, <span class="sql-keyword">COUNT</span>(*)
+                        <span class="sql-keyword">FROM</span> applications
+                        <span class="sql-keyword">GROUP BY</span> job_id;
+                    </div>
+                </div>
+                <div>
+                    <h3>🔗 JOIN Queries</h3>
+                    <div class="code-block">
+                        <span class="sql-comment">-- Applications with job and user details</span>
+                        <span class="sql-keyword">SELECT</span>
+                        u.full_name <span class="sql-keyword">AS</span> applicant_name,
+                        j.title <span class="sql-keyword">AS</span> job_title,
+                        j.company,
+                        a.status,
+                        a.applied_at
+                        <span class="sql-keyword">FROM</span> applications a
+                        <span class="sql-keyword">JOIN</span> users u <span class="sql-keyword">ON</span> a.applicant_id
+                        = u.id
+                        <span class="sql-keyword">JOIN</span> jobs j <span class="sql-keyword">ON</span> a.job_id =
+                        j.id;
+
+                        <span class="sql-comment">-- Jobs with poster details</span>
+                        <span class="sql-keyword">SELECT</span>
+                        j.title,
+                        j.company,
+                        u.full_name <span class="sql-keyword">AS</span> posted_by_name,
+                        j.created_at
+                        <span class="sql-keyword">FROM</span> jobs j
+                        <span class="sql-keyword">JOIN</span> users u <span class="sql-keyword">ON</span> j.posted_by =
+                        u.id;
+                    </div>
+                </div>
+            </div>
+
+            <div class="success-box">
+                <h3>🎯 Understanding JOINs</h3>
+                <ul>
+                    <li><strong>INNER JOIN:</strong> Returns only matching records from both tables</li>
+                    <li><strong>LEFT JOIN:</strong> Returns all records from left table, matching from right</li>
+                    <li><strong>Foreign keys make JOINs possible</strong> - they define relationships</li>
+                </ul>
+            </div>
+
+            <div class="highlight">
+                <h3>💡 Real-World Query Examples</h3>
+                <p><strong>Business Question:</strong> "Show me all pending applications for jobs posted this month"</p>
+                <div class="code-block">
+                    <span class="sql-keyword">SELECT</span> u.full_name, j.title, a.applied_at
+                    <span class="sql-keyword">FROM</span> applications a
+                    <span class="sql-keyword">JOIN</span> users u <span class="sql-keyword">ON</span> a.applicant_id =
+                    u.id
+                    <span class="sql-keyword">JOIN</span> jobs j <span class="sql-keyword">ON</span> a.job_id = j.id
+                    <span class="sql-keyword">WHERE</span> a.status = <span class="sql-string">'pending'</span>
+                    <span class="sql-keyword">AND</span> j.created_at >= <span
+                        class="sql-keyword">DATE_TRUNC</span>(<span class="sql-string">'month'</span>, <span
+                        class="sql-keyword">CURRENT_DATE</span>);
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 14: Assignment & Next Steps -->
+        <div class="slide">
+            <div class="slide-number">14/14</div>
+            <h1>Assignment & Next Lecture</h1>
+            <div class="two-column">
+                <div>
+                    <h3>📝 Assignment for Next Class</h3>
+                    <ol>
+                        <li><strong>Complete Database Setup:</strong>
+                            <ul>
+                                <li>Create job_portal database</li>
+                                <li>Create all three tables (users, jobs, applications)</li>
+                                <li>Insert at least 5 sample records in each table</li>
+                                <li>Test all foreign key relationships</li>
+                            </ul>
+                        </li>
+                        <li><strong>Practice SQL Queries:</strong>
+                            <ul>
+                                <li>Write 5 different SELECT queries</li>
+                                <li>Practice at least 2 JOIN queries</li>
+                                <li>Try UPDATE and DELETE with WHERE clauses</li>
+                            </ul>
+                        </li>
+                        <li><strong>Database Design Exercise:</strong>
+                            <ul>
+                                <li>Design tables for a simple blog system</li>
+                                <li>Include: posts, authors, comments</li>
+                                <li>Define relationships and constraints</li>
+                            </ul>
+                        </li>
+                    </ol>
+                </div>
+                <div>
+                    <h3>🔮 Next Lecture Preview</h3>
+                    <div class="highlight">
+                        <h4>Lecture 3: Node.js & Express.js Fundamentals</h4>
+                        <ul>
+                            <li>Setting up Express.js server</li>
+                            <li>Creating REST API endpoints</li>
+                            <li>Middleware concepts</li>
+                            <li>Routing and error handling</li>
+                            <li>Testing APIs with Postman</li>
+                        </ul>
+                    </div>
+
+                    <h3>📚 Recommended Reading</h3>
+                    <ul>
+                        <li><strong>PostgreSQL Tutorial:</strong> Complete w3schools SQL tutorial</li>
+                        <li><strong>Database Design:</strong> Learn about normalization</li>
+                        <li><strong>SQL Practice:</strong> Try SQLBolt interactive exercises</li>
+                    </ul>
+
+                    <div class="success-box">
+                        <h3>✅ You Should Now Understand:</h3>
+                        <ul>
+                            <li>How relational databases work</li>
+                            <li>Primary and foreign keys</li>
+                            <li>Basic SQL CRUD operations</li>
+                            <li>Table relationships and JOINs</li>
+                            <li>PostgreSQL basics</li>
+                        </ul>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 30px;">
+                        <h2 style="color: #4facfe; border: none;">Questions? 🤔</h2>
+                        <p style="font-size: 1.2em;">Let's discuss any database concepts or SQL syntax!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="navigation">
+        <button class="nav-btn"><a href="index.html" target="_blank">L1</a></button>
+        <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">← Previous</button>
+        <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">Next →</button>
+        <button class="nav-btn"><a href="#" target="_blank">L3</a></button>
+    </div>
+
+    <!-- Slide Counter -->
+    <div class="slide-counter">
+        <span id="slideCounter">1 / 14</span>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function showSlide(n) {
+            // Hide all slides
+            slides.forEach(slide => slide.classList.remove('active'));
+
+            // Show current slide
+            if (n >= totalSlides) currentSlide = 0;
+            if (n < 0) currentSlide = totalSlides - 1;
+
+            slides[currentSlide].classList.add('active');
+
+            // Update navigation buttons
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+
+            // Update slide counter
+            document.getElementById('slideCounter').textContent = `${currentSlide + 1} / ${totalSlides}`;
+        }
+
+        function changeSlide(n) {
+            currentSlide += n;
+            showSlide(currentSlide);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+            if (e.key === 'Home') { currentSlide = 0; showSlide(currentSlide); }
+            if (e.key === 'End') { currentSlide = totalSlides - 1; showSlide(currentSlide); }
+        });
+
+        // Touch/swipe support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', function (e) {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', function (e) {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            const swipeThreshold = 100;
+            const swipeDistance = touchEndX - touchStartX;
+
+            if (Math.abs(swipeDistance) > swipeThreshold) {
+                if (swipeDistance > 0) {
+                    changeSlide(-1); // Swipe right - previous slide
+                } else {
+                    changeSlide(1);  // Swipe left - next slide
+                }
+            }
+        }
+
+        // Initialize
+        showSlide(0);
+
+        // Auto-hide navigation on mobile after 3 seconds
+        let hideNavTimeout;
+        function resetHideNavTimeout() {
+            clearTimeout(hideNavTimeout);
+            document.querySelector('.navigation').style.opacity = '1';
+            document.querySelector('.slide-counter').style.opacity = '1';
+
+            hideNavTimeout = setTimeout(() => {
+                if (window.innerWidth <= 768) {
+                    document.querySelector('.navigation').style.opacity = '0.3';
+                    document.querySelector('.slide-counter').style.opacity = '0.3';
+                }
+            }, 3000);
+        }
+
+        document.addEventListener('mousemove', resetHideNavTimeout);
+        document.addEventListener('touchstart', resetHideNavTimeout);
+        resetHideNavTimeout();
+    </script>
+</body>
+
+</html>
+<div class="timeline-time">Step 1: Verify Installation</div>
+<div class="code-block">
+    <span class="sql-comment"># Check PostgreSQL version</span>
+    psql --version
+
+    <span class="sql-comment"># Should show: psql (PostgreSQL) 12.x or higher</span>
+</div>
+</div>
+
+<div class="timeline-item">
+    <div class="timeline-time">Step 2: Connect to PostgreSQL</div>
+    <div class="code-block">
+        <span class="sql-comment"># Connect as postgres user (default superuser)</span>
+        psql -U postgres
+
+        <span class="sql-comment"># You'll be prompted for password</span>
+        <span class="sql-comment"># Enter the password you set during installation</span>
+    </div>
+</div>
+
+<div class="timeline-item">

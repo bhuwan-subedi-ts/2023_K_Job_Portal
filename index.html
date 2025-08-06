@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,7 +25,7 @@
             border-radius: 15px;
             padding: 40px;
             margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             display: none;
             min-height: 600px;
             position: relative;
@@ -36,8 +37,15 @@
         }
 
         @keyframes slideIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         h1 {
@@ -88,7 +96,7 @@
 
         .tech-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
 
         .tech-card h4 {
@@ -222,20 +230,26 @@
                 padding: 20px;
                 margin-bottom: 15px;
             }
-            
+
             .two-column {
                 grid-template-columns: 1fr;
             }
-            
+
             .tech-stack {
                 grid-template-columns: 1fr;
             }
-            
-            h1 { font-size: 2em; }
-            h2 { font-size: 1.5em; }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            h2 {
+                font-size: 1.5em;
+            }
         }
     </style>
 </head>
+
 <body>
     <div class="slide-container">
         <!-- Slide 1: Title Slide -->
@@ -270,9 +284,10 @@
                 <div>
                     <h3>🌐 Web Development Definition</h3>
                     <p style="font-size: 1.2em; line-height: 1.6;">
-                        Web development is the process of creating websites and web applications that run on the internet or intranet.
+                        Web development is the process of creating websites and web applications that run on the
+                        internet or intranet.
                     </p>
-                    
+
                     <h3>🎯 Why Learn Web Development?</h3>
                     <ul>
                         <li><strong>High Demand:</strong> Growing job market</li>
@@ -289,9 +304,10 @@
                         <li><strong>Web Applications:</strong> Complex functionality</li>
                         <li><strong>Progressive Web Apps:</strong> App-like experience</li>
                     </ul>
-                    
+
                     <div class="highlight">
-                        <strong>Our Project:</strong> We'll build a dynamic web application - a Job Portal with user authentication, role-based access, and database integration.
+                        <strong>Our Project:</strong> We'll build a dynamic web application - a Job Portal with user
+                        authentication, role-based access, and database integration.
                     </div>
                 </div>
             </div>
@@ -374,7 +390,7 @@
                     🗄️ Database<br>(Data Storage)
                 </div>
             </div>
-            
+
             <div class="two-column">
                 <div>
                     <h3>🔄 How It Works:</h3>
@@ -412,7 +428,7 @@
                 <div>
                     <h3>🌐 HTTP (HyperText Transfer Protocol)</h3>
                     <p>Communication protocol between client and server</p>
-                    
+
                     <h4>Common HTTP Methods:</h4>
                     <ul>
                         <li><strong style="color: #27ae60;">GET:</strong> Retrieve data</li>
@@ -420,7 +436,7 @@
                         <li><strong style="color: #f39c12;">PUT:</strong> Update existing data</li>
                         <li><strong style="color: #e74c3c;">DELETE:</strong> Remove data</li>
                     </ul>
-                    
+
                     <h4>HTTP Status Codes:</h4>
                     <ul>
                         <li><strong>200:</strong> Success</li>
@@ -434,7 +450,7 @@
                 <div>
                     <h3>🔄 REST API Principles</h3>
                     <p><strong>RE</strong>presentational <strong>S</strong>tate <strong>T</strong>ransfer</p>
-                    
+
                     <h4>Key Principles:</h4>
                     <ul>
                         <li><strong>Stateless:</strong> Each request is independent</li>
@@ -442,15 +458,15 @@
                         <li><strong>HTTP Methods:</strong> Actions on resources</li>
                         <li><strong>JSON Format:</strong> Data exchange format</li>
                     </ul>
-                    
+
                     <h4>Job Portal API Examples:</h4>
                     <div class="code-block">
-GET /api/jobs           // Get all jobs
-POST /api/jobs          // Create new job
-GET /api/jobs/123       // Get specific job
-PUT /api/jobs/123       // Update job
-DELETE /api/jobs/123    // Delete job
-POST /api/jobs/123/apply // Apply for job
+                        GET /api/jobs // Get all jobs
+                        POST /api/jobs // Create new job
+                        GET /api/jobs/123 // Get specific job
+                        PUT /api/jobs/123 // Update job
+                        DELETE /api/jobs/123 // Delete job
+                        POST /api/jobs/123/apply // Apply for job
                     </div>
                 </div>
             </div>
@@ -471,7 +487,7 @@ POST /api/jobs/123/apply // Apply for job
                         <li>Fast and scalable</li>
                     </ul>
                 </div>
-                
+
                 <div class="tech-card">
                     <h4>🚀 Express.js</h4>
                     <p><strong>Web Application Framework</strong></p>
@@ -482,7 +498,7 @@ POST /api/jobs/123/apply // Apply for job
                         <li>RESTful API development</li>
                     </ul>
                 </div>
-                
+
                 <div class="tech-card">
                     <h4>🐘 PostgreSQL</h4>
                     <p><strong>Relational Database</strong></p>
@@ -493,7 +509,7 @@ POST /api/jobs/123/apply // Apply for job
                         <li>Strong consistency</li>
                     </ul>
                 </div>
-                
+
                 <div class="tech-card">
                     <h4>⚛️ React.js</h4>
                     <p><strong>Frontend Library</strong></p>
@@ -505,7 +521,7 @@ POST /api/jobs/123/apply // Apply for job
                     </ul>
                 </div>
             </div>
-            
+
             <div class="highlight">
                 <h3>🤔 Why This Stack?</h3>
                 <ul>
@@ -531,7 +547,7 @@ POST /api/jobs/123/apply // Apply for job
                         <li>Practice database design</li>
                         <li>Deploy to production</li>
                     </ul>
-                    
+
                     <h3>👥 User Types</h3>
                     <div class="tech-card">
                         <h4>🔧 Admin</h4>
@@ -541,7 +557,7 @@ POST /api/jobs/123/apply // Apply for job
                             <li>Manage applicant status</li>
                         </ul>
                     </div>
-                    
+
                     <div class="tech-card">
                         <h4>👤 Job Seeker</h4>
                         <ul style="text-align: left;">
@@ -576,9 +592,10 @@ POST /api/jobs/123/apply // Apply for job
                             </ul>
                         </li>
                     </ul>
-                    
+
                     <div class="highlight">
-                        <strong>End Goal:</strong> A fully functional, deployed job portal that demonstrates professional web development skills.
+                        <strong>End Goal:</strong> A fully functional, deployed job portal that demonstrates
+                        professional web development skills.
                     </div>
                 </div>
             </div>
@@ -598,7 +615,7 @@ POST /api/jobs/123/apply // Apply for job
                         <li><strong>Normalization:</strong> Reduce data redundancy</li>
                         <li><strong>Implementation:</strong> Create actual tables</li>
                     </ol>
-                    
+
                     <h3>🔑 Key Concepts</h3>
                     <ul>
                         <li><strong>Primary Key:</strong> Unique identifier</li>
@@ -613,17 +630,17 @@ POST /api/jobs/123/apply // Apply for job
                         <h4>👤 Users</h4>
                         <p>id, email, password, name, user_type, created_at</p>
                     </div>
-                    
+
                     <div class="tech-card">
                         <h4>💼 Jobs</h4>
                         <p>id, title, description, company, location, salary, posted_by, created_at</p>
                     </div>
-                    
+
                     <div class="tech-card">
                         <h4>📝 Applications</h4>
                         <p>id, job_id, applicant_id, cover_letter, status, applied_at</p>
                     </div>
-                    
+
                     <h3>🔗 Relationships</h3>
                     <ul>
                         <li><strong>Users → Jobs:</strong> One-to-Many (Admin posts jobs)</li>
@@ -639,30 +656,33 @@ POST /api/jobs/123/apply // Apply for job
             <div class="slide-number">9/12</div>
             <h1>Development Environment Setup</h1>
             <h3>📋 Required Software Installation</h3>
-            
+
             <div class="timeline">
                 <div class="timeline-item">
                     <div class="timeline-time">Step 1:</div>
                     <strong>Node.js (v16 or higher)</strong>
-                    <p>Download from <a href="https://nodejs.org" target="_blank">nodejs.org</a> - Choose LTS version</p>
+                    <p>Download from <a href="https://nodejs.org" target="_blank">nodejs.org</a> - Choose LTS version
+                    </p>
                     <div class="code-block">node --version
-npm --version</div>
+                        npm --version</div>
                 </div>
-                
+
                 <div class="timeline-item">
                     <div class="timeline-time">Step 2:</div>
                     <strong>PostgreSQL (v12 or higher)</strong>
-                    <p>Download from <a href="https://postgresql.org" target="_blank">postgresql.org</a> - Remember your password!</p>
+                    <p>Download from <a href="https://postgresql.org" target="_blank">postgresql.org</a> - Remember your
+                        password!</p>
                     <div class="code-block">psql --version</div>
                 </div>
-                
+
                 <div class="timeline-item">
                     <div class="timeline-time">Step 3:</div>
                     <strong>Visual Studio Code</strong>
-                    <p>Download from <a href="https://code.visualstudio.com" target="_blank">code.visualstudio.com</a></p>
+                    <p>Download from <a href="https://code.visualstudio.com" target="_blank">code.visualstudio.com</a>
+                    </p>
                     <p><strong>Recommended Extensions:</strong> JavaScript (ES6), PostgreSQL, Thunder Client</p>
                 </div>
-                
+
                 <div class="timeline-item">
                     <div class="timeline-time">Step 4:</div>
                     <strong>Git & GitHub Account</strong>
@@ -680,54 +700,55 @@ npm --version</div>
                 <div>
                     <h3>📁 Recommended Structure</h3>
                     <div class="code-block">job-portal/
-├── backend/
-│   ├── config/
-│   │   └── database.js
-│   ├── routes/
-│   │   ├── auth.js
-│   │   ├── jobs.js
-│   │   └── applications.js
-│   ├── middleware/
-│   │   └── auth.js
-│   ├── models/
-│   ├── server.js
-│   └── package.json
-├── frontend/
-│   ├── public/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   ├── utils/
-│   │   └── App.js
-│   └── package.json
-└── README.md</div>
+                        ├── backend/
+                        │ ├── config/
+                        │ │ └── database.js
+                        │ ├── routes/
+                        │ │ ├── auth.js
+                        │ │ ├── jobs.js
+                        │ │ └── applications.js
+                        │ ├── middleware/
+                        │ │ └── auth.js
+                        │ ├── models/
+                        │ ├── server.js
+                        │ └── package.json
+                        ├── frontend/
+                        │ ├── public/
+                        │ ├── src/
+                        │ │ ├── components/
+                        │ │ ├── pages/
+                        │ │ ├── utils/
+                        │ │ └── App.js
+                        │ └── package.json
+                        └── README.md</div>
                 </div>
                 <div>
                     <h3>🚀 Let's Create It!</h3>
                     <p><strong>Commands to run:</strong></p>
                     <div class="code-block"># Create main project folder
-mkdir job-portal
-cd job-portal
+                        mkdir job-portal
+                        cd job-portal
 
-# Create backend structure
-mkdir backend
-cd backend
-npm init -y
+                        # Create backend structure
+                        mkdir backend
+                        cd backend
+                        npm init -y
 
-# Install backend dependencies
-npm install express cors dotenv bcrypt jsonwebtoken pg
+                        # Install backend dependencies
+                        npm install express cors dotenv bcrypt jsonwebtoken pg
 
-# Create frontend
-cd ..
-npx create-react-app frontend
+                        # Create frontend
+                        cd ..
+                        npx create-react-app frontend
 
-# Initialize Git repository
-git init
-git add .
-git commit -m "Initial project setup"</div>
-                    
+                        # Initialize Git repository
+                        git init
+                        git add .
+                        git commit -m "Initial project setup"</div>
+
                     <div class="highlight">
-                        <strong>💡 Pro Tip:</strong> Always organize your code with clear folder structures. This makes collaboration easier and helps maintain clean architecture.
+                        <strong>💡 Pro Tip:</strong> Always organize your code with clear folder structures. This makes
+                        collaboration easier and helps maintain clean architecture.
                     </div>
                 </div>
             </div>
@@ -740,53 +761,53 @@ git commit -m "Initial project setup"</div>
             <div class="two-column">
                 <div>
                     <h3>✅ Verification Checklist</h3>
-                    
+
                     <h4>🟢 Node.js & NPM</h4>
                     <div class="code-block">node --version
-# Should show: v16.x.x or higher
+                        # Should show: v16.x.x or higher
 
-npm --version
-# Should show: 8.x.x or higher</div>
-                    
+                        npm --version
+                        # Should show: 8.x.x or higher</div>
+
                     <h4>🐘 PostgreSQL</h4>
                     <div class="code-block">psql --version
-# Should show: psql (PostgreSQL) 12.x or higher
+                        # Should show: psql (PostgreSQL) 12.x or higher
 
-# Test connection
-psql -U postgres
-# Enter your password when prompted</div>
-                    
+                        # Test connection
+                        psql -U postgres
+                        # Enter your password when prompted</div>
+
                     <h4>⚛️ React</h4>
                     <div class="code-block">cd frontend
-npm start
-# Should open browser at localhost:3000</div>
+                        npm start
+                        # Should open browser at localhost:3000</div>
                 </div>
                 <div>
                     <h3>🛠️ Basic Backend Test</h3>
                     <p>Create a simple server to test everything works:</p>
-                    
+
                     <div class="code-block">// backend/server.js
-const express = require('express');
-const app = express();
-const PORT = 5000;
+                        const express = require('express');
+                        const app = express();
+                        const PORT = 5000;
 
-app.get('/api/test', (req, res) => {
-    res.json({ 
-        message: 'Server is working!',
-        timestamp: new Date().toISOString()
-    });
-});
+                        app.get('/api/test', (req, res) => {
+                        res.json({
+                        message: 'Server is working!',
+                        timestamp: new Date().toISOString()
+                        });
+                        });
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});</div>
-                    
+                        app.listen(PORT, () => {
+                        console.log(`Server running on port ${PORT}`);
+                        });</div>
+
                     <div class="code-block"># Run the server
-cd backend
-node server.js
+                        cd backend
+                        node server.js
 
-# Test in browser: http://localhost:5000/api/test</div>
-                    
+                        # Test in browser: http://localhost:5000/api/test</div>
+
                     <div class="highlight">
                         <strong>Success!</strong> If you see JSON response, your setup is complete! 🎉
                     </div>
@@ -836,14 +857,14 @@ node server.js
                             <li>Understanding relationships</li>
                         </ul>
                     </div>
-                    
+
                     <h3>📚 Recommended Reading</h3>
                     <ul>
                         <li><strong>HTTP Methods:</strong> MDN Web Docs - HTTP Methods</li>
                         <li><strong>REST APIs:</strong> RESTful Web Services Tutorial</li>
                         <li><strong>Database Basics:</strong> Introduction to Relational Databases</li>
                     </ul>
-                    
+
                     <div style="text-align: center; margin-top: 30px;">
                         <h2 style="color: #667eea; border: none;">Questions? 🤔</h2>
                         <p style="font-size: 1.2em;">Let's discuss any installation issues or concepts!</p>
@@ -857,6 +878,8 @@ node server.js
     <div class="navigation">
         <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">← Previous</button>
         <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">Next →</button>
+        <button class="nav-btn"><a href="lecture2_slides.html" target="_blank">L2</a></button>
+
     </div>
 
     <!-- Slide Counter -->
@@ -872,17 +895,17 @@ node server.js
         function showSlide(n) {
             // Hide all slides
             slides.forEach(slide => slide.classList.remove('active'));
-            
+
             // Show current slide
             if (n >= totalSlides) currentSlide = 0;
             if (n < 0) currentSlide = totalSlides - 1;
-            
+
             slides[currentSlide].classList.add('active');
-            
+
             // Update navigation buttons
             document.getElementById('prevBtn').disabled = currentSlide === 0;
             document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
-            
+
             // Update slide counter
             document.getElementById('slideCounter').textContent = `${currentSlide + 1} / ${totalSlides}`;
         }
@@ -893,7 +916,7 @@ node server.js
         }
 
         // Keyboard navigation
-        document.addEventListener('keydown', function(e) {
+        document.addEventListener('keydown', function (e) {
             if (e.key === 'ArrowLeft') changeSlide(-1);
             if (e.key === 'ArrowRight') changeSlide(1);
             if (e.key === 'Home') { currentSlide = 0; showSlide(currentSlide); }
@@ -904,11 +927,11 @@ node server.js
         let touchStartX = 0;
         let touchEndX = 0;
 
-        document.addEventListener('touchstart', function(e) {
+        document.addEventListener('touchstart', function (e) {
             touchStartX = e.changedTouches[0].screenX;
         });
 
-        document.addEventListener('touchend', function(e) {
+        document.addEventListener('touchend', function (e) {
             touchEndX = e.changedTouches[0].screenX;
             handleSwipe();
         });
@@ -916,7 +939,7 @@ node server.js
         function handleSwipe() {
             const swipeThreshold = 100;
             const swipeDistance = touchEndX - touchStartX;
-            
+
             if (Math.abs(swipeDistance) > swipeThreshold) {
                 if (swipeDistance > 0) {
                     changeSlide(-1); // Swipe right - previous slide
@@ -935,7 +958,7 @@ node server.js
             clearTimeout(hideNavTimeout);
             document.querySelector('.navigation').style.opacity = '1';
             document.querySelector('.slide-counter').style.opacity = '1';
-            
+
             hideNavTimeout = setTimeout(() => {
                 if (window.innerWidth <= 768) {
                     document.querySelector('.navigation').style.opacity = '0.3';
