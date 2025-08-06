@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture 1: Introduction to Web Development</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+        }
+
+        .slide-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .slide {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: none;
+            min-height: 600px;
+            position: relative;
+        }
+
+        .slide.active {
+            display: block;
+            animation: slideIn 0.5s ease-in-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-align: center;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 15px;
+        }
+
+        h2 {
+            color: #764ba2;
+            font-size: 2em;
+            margin-bottom: 20px;
+            border-left: 5px solid #764ba2;
+            padding-left: 15px;
+        }
+
+        h3 {
+            color: #555;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .tech-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #e0e6ed;
+            transition: all 0.3s ease;
+        }
+
+        .tech-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .tech-card h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+
+        ul {
+            font-size: 1.1em;
+            line-height: 1.8;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .architecture-diagram {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .diagram-box {
+            display: inline-block;
+            background: #f8f9ff;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            padding: 15px 25px;
+            margin: 10px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .arrow {
+            font-size: 2em;
+            color: #764ba2;
+            margin: 0 10px;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            margin: 0 5px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        .nav-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .slide-counter {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: rgba(102, 126, 234, 0.9);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            z-index: 1000;
+        }
+
+        .slide-number {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            background: #667eea;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #a8edea 0%, #fed6e3 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #667eea;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+
+        .timeline {
+            margin: 20px 0;
+        }
+
+        .timeline-item {
+            background: #f8f9ff;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #667eea;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .timeline-time {
+            font-weight: bold;
+            color: #764ba2;
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 20px;
+                margin-bottom: 15px;
+            }
+            
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+            
+            .tech-stack {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 { font-size: 2em; }
+            h2 { font-size: 1.5em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <!-- Slide 1: Title Slide -->
+        <div class="slide active">
+            <div class="slide-number">1/12</div>
+            <h1>Introduction to Web Development</h1>
+            <div style="text-align: center; margin-top: 50px;">
+                <h2 style="border: none; color: #764ba2;">Building a Job Portal Application</h2>
+                <div style="font-size: 1.3em; margin: 40px 0; color: #666;">
+                    <strong>Course:</strong> Application Development for BIT Students<br>
+                    <strong>Duration:</strong> 15 Lectures × 1.5 hours<br>
+                    <strong>Tech Stack:</strong> Node.js, Express.js, PostgreSQL, React.js
+                </div>
+                <div class="highlight">
+                    <h3>Today's Learning Objectives:</h3>
+                    <ul style="text-align: left; display: inline-block;">
+                        <li>Understand web development fundamentals</li>
+                        <li>Learn client-server architecture</li>
+                        <li>Overview of our tech stack</li>
+                        <li>Analyze project requirements</li>
+                        <li>Set up development environment</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: What is Web Development? -->
+        <div class="slide">
+            <div class="slide-number">2/12</div>
+            <h1>What is Web Development?</h1>
+            <div class="two-column">
+                <div>
+                    <h3>🌐 Web Development Definition</h3>
+                    <p style="font-size: 1.2em; line-height: 1.6;">
+                        Web development is the process of creating websites and web applications that run on the internet or intranet.
+                    </p>
+                    
+                    <h3>🎯 Why Learn Web Development?</h3>
+                    <ul>
+                        <li><strong>High Demand:</strong> Growing job market</li>
+                        <li><strong>Versatility:</strong> Build various applications</li>
+                        <li><strong>Creativity:</strong> Combine logic with design</li>
+                        <li><strong>Global Reach:</strong> Accessible worldwide</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>📱 Types of Web Applications</h3>
+                    <ul>
+                        <li><strong>Static Websites:</strong> Information display</li>
+                        <li><strong>Dynamic Websites:</strong> Interactive content</li>
+                        <li><strong>Web Applications:</strong> Complex functionality</li>
+                        <li><strong>Progressive Web Apps:</strong> App-like experience</li>
+                    </ul>
+                    
+                    <div class="highlight">
+                        <strong>Our Project:</strong> We'll build a dynamic web application - a Job Portal with user authentication, role-based access, and database integration.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Frontend vs Backend -->
+        <div class="slide">
+            <div class="slide-number">3/12</div>
+            <h1>Frontend vs Backend Development</h1>
+            <div class="two-column">
+                <div>
+                    <h2 style="color: #e74c3c;">🎨 Frontend (Client-Side)</h2>
+                    <p><strong>What users see and interact with</strong></p>
+                    <ul>
+                        <li><strong>Languages:</strong> HTML, CSS, JavaScript</li>
+                        <li><strong>Frameworks:</strong> React, Vue, Angular</li>
+                        <li><strong>Responsibilities:</strong>
+                            <ul>
+                                <li>User Interface (UI)</li>
+                                <li>User Experience (UX)</li>
+                                <li>Form handling</li>
+                                <li>Responsive design</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <div class="tech-card">
+                        <h4>Frontend Tools We'll Use</h4>
+                        <p><strong>React.js</strong> - Component-based UI library</p>
+                    </div>
+                </div>
+                <div>
+                    <h2 style="color: #27ae60;">⚙️ Backend (Server-Side)</h2>
+                    <p><strong>Server logic and data management</strong></p>
+                    <ul>
+                        <li><strong>Languages:</strong> Node.js, Python, Java, PHP</li>
+                        <li><strong>Frameworks:</strong> Express, Django, Spring</li>
+                        <li><strong>Responsibilities:</strong>
+                            <ul>
+                                <li>Business logic</li>
+                                <li>Database operations</li>
+                                <li>Authentication</li>
+                                <li>API development</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <div class="tech-card">
+                        <h4>Backend Tools We'll Use</h4>
+                        <p><strong>Node.js + Express.js</strong> - JavaScript runtime and web framework</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Client-Server Architecture -->
+        <div class="slide">
+            <div class="slide-number">4/12</div>
+            <h1>Client-Server Architecture</h1>
+            <div class="architecture-diagram">
+                <div class="diagram-box">
+                    👨‍💻 Client<br>(Browser)
+                </div>
+                <span class="arrow">→</span>
+                <div class="diagram-box">
+                    📡 HTTP Request
+                </div>
+                <span class="arrow">→</span>
+                <div class="diagram-box">
+                    🖥️ Server<br>(Backend)
+                </div>
+                <br><br>
+                <div class="diagram-box">
+                    👨‍💻 Client<br>(Renders Response)
+                </div>
+                <span class="arrow">←</span>
+                <div class="diagram-box">
+                    📡 HTTP Response
+                </div>
+                <span class="arrow">←</span>
+                <div class="diagram-box">
+                    🗄️ Database<br>(Data Storage)
+                </div>
+            </div>
+            
+            <div class="two-column">
+                <div>
+                    <h3>🔄 How It Works:</h3>
+                    <ol>
+                        <li><strong>Client Request:</strong> User clicks button</li>
+                        <li><strong>HTTP Request:</strong> Sent to server</li>
+                        <li><strong>Server Processing:</strong> Handles business logic</li>
+                        <li><strong>Database Query:</strong> Retrieves/stores data</li>
+                        <li><strong>HTTP Response:</strong> Sent back to client</li>
+                        <li><strong>Client Rendering:</strong> Updates user interface</li>
+                    </ol>
+                </div>
+                <div>
+                    <h3>📋 Example - Job Portal:</h3>
+                    <div class="highlight">
+                        <strong>Scenario:</strong> User applies for a job
+                        <ol>
+                            <li>User clicks "Apply" button</li>
+                            <li>Frontend sends POST request</li>
+                            <li>Server validates user authentication</li>
+                            <li>Server saves application to database</li>
+                            <li>Server responds with success message</li>
+                            <li>Frontend shows confirmation</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: HTTP Protocol Basics -->
+        <div class="slide">
+            <div class="slide-number">5/12</div>
+            <h1>HTTP Protocol & REST APIs</h1>
+            <div class="two-column">
+                <div>
+                    <h3>🌐 HTTP (HyperText Transfer Protocol)</h3>
+                    <p>Communication protocol between client and server</p>
+                    
+                    <h4>Common HTTP Methods:</h4>
+                    <ul>
+                        <li><strong style="color: #27ae60;">GET:</strong> Retrieve data</li>
+                        <li><strong style="color: #3498db;">POST:</strong> Create new data</li>
+                        <li><strong style="color: #f39c12;">PUT:</strong> Update existing data</li>
+                        <li><strong style="color: #e74c3c;">DELETE:</strong> Remove data</li>
+                    </ul>
+                    
+                    <h4>HTTP Status Codes:</h4>
+                    <ul>
+                        <li><strong>200:</strong> Success</li>
+                        <li><strong>201:</strong> Created</li>
+                        <li><strong>400:</strong> Bad Request</li>
+                        <li><strong>401:</strong> Unauthorized</li>
+                        <li><strong>404:</strong> Not Found</li>
+                        <li><strong>500:</strong> Server Error</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>🔄 REST API Principles</h3>
+                    <p><strong>RE</strong>presentational <strong>S</strong>tate <strong>T</strong>ransfer</p>
+                    
+                    <h4>Key Principles:</h4>
+                    <ul>
+                        <li><strong>Stateless:</strong> Each request is independent</li>
+                        <li><strong>Resource-based:</strong> URLs represent resources</li>
+                        <li><strong>HTTP Methods:</strong> Actions on resources</li>
+                        <li><strong>JSON Format:</strong> Data exchange format</li>
+                    </ul>
+                    
+                    <h4>Job Portal API Examples:</h4>
+                    <div class="code-block">
+GET /api/jobs           // Get all jobs
+POST /api/jobs          // Create new job
+GET /api/jobs/123       // Get specific job
+PUT /api/jobs/123       // Update job
+DELETE /api/jobs/123    // Delete job
+POST /api/jobs/123/apply // Apply for job
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Our Tech Stack -->
+        <div class="slide">
+            <div class="slide-number">6/12</div>
+            <h1>Our Technology Stack</h1>
+            <div class="tech-stack">
+                <div class="tech-card">
+                    <h4>🟢 Node.js</h4>
+                    <p><strong>JavaScript Runtime</strong></p>
+                    <ul style="text-align: left;">
+                        <li>Server-side JavaScript</li>
+                        <li>Event-driven, non-blocking I/O</li>
+                        <li>NPM package ecosystem</li>
+                        <li>Fast and scalable</li>
+                    </ul>
+                </div>
+                
+                <div class="tech-card">
+                    <h4>🚀 Express.js</h4>
+                    <p><strong>Web Application Framework</strong></p>
+                    <ul style="text-align: left;">
+                        <li>Minimal and flexible</li>
+                        <li>Robust routing system</li>
+                        <li>Middleware support</li>
+                        <li>RESTful API development</li>
+                    </ul>
+                </div>
+                
+                <div class="tech-card">
+                    <h4>🐘 PostgreSQL</h4>
+                    <p><strong>Relational Database</strong></p>
+                    <ul style="text-align: left;">
+                        <li>ACID compliance</li>
+                        <li>Advanced data types</li>
+                        <li>Excellent performance</li>
+                        <li>Strong consistency</li>
+                    </ul>
+                </div>
+                
+                <div class="tech-card">
+                    <h4>⚛️ React.js</h4>
+                    <p><strong>Frontend Library</strong></p>
+                    <ul style="text-align: left;">
+                        <li>Component-based architecture</li>
+                        <li>Virtual DOM</li>
+                        <li>Rich ecosystem</li>
+                        <li>Reusable components</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="highlight">
+                <h3>🤔 Why This Stack?</h3>
+                <ul>
+                    <li><strong>JavaScript Everywhere:</strong> Same language for frontend and backend</li>
+                    <li><strong>Industry Standard:</strong> Widely used in modern web development</li>
+                    <li><strong>Great Learning Curve:</strong> Excellent for beginners</li>
+                    <li><strong>Strong Community:</strong> Extensive documentation and support</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 7: Project Overview -->
+        <div class="slide">
+            <div class="slide-number">7/12</div>
+            <h1>Job Portal Project Overview</h1>
+            <div class="two-column">
+                <div>
+                    <h3>🎯 Project Goals</h3>
+                    <ul>
+                        <li>Build a complete web application</li>
+                        <li>Learn full-stack development</li>
+                        <li>Implement user authentication</li>
+                        <li>Practice database design</li>
+                        <li>Deploy to production</li>
+                    </ul>
+                    
+                    <h3>👥 User Types</h3>
+                    <div class="tech-card">
+                        <h4>🔧 Admin</h4>
+                        <ul style="text-align: left;">
+                            <li>Create, edit, delete jobs</li>
+                            <li>View job applications</li>
+                            <li>Manage applicant status</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="tech-card">
+                        <h4>👤 Job Seeker</h4>
+                        <ul style="text-align: left;">
+                            <li>Browse available jobs</li>
+                            <li>Apply for positions</li>
+                            <li>View application history</li>
+                        </ul>
+                    </div>
+                </div>
+                <div>
+                    <h3>⚙️ Core Features</h3>
+                    <ul>
+                        <li><strong>Authentication System:</strong>
+                            <ul>
+                                <li>User registration & login</li>
+                                <li>JWT token-based auth</li>
+                                <li>Role-based access control</li>
+                            </ul>
+                        </li>
+                        <li><strong>Job Management:</strong>
+                            <ul>
+                                <li>CRUD operations for jobs</li>
+                                <li>Search and filtering</li>
+                                <li>Job categorization</li>
+                            </ul>
+                        </li>
+                        <li><strong>Application System:</strong>
+                            <ul>
+                                <li>Apply for jobs</li>
+                                <li>Application tracking</li>
+                                <li>Status management</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    
+                    <div class="highlight">
+                        <strong>End Goal:</strong> A fully functional, deployed job portal that demonstrates professional web development skills.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Database Design Overview -->
+        <div class="slide">
+            <div class="slide-number">8/12</div>
+            <h1>Database Design Principles</h1>
+            <div class="two-column">
+                <div>
+                    <h3>📊 Database Design Process</h3>
+                    <ol>
+                        <li><strong>Requirements Analysis:</strong> What data do we need?</li>
+                        <li><strong>Entity Identification:</strong> Main objects in our system</li>
+                        <li><strong>Relationship Mapping:</strong> How entities connect</li>
+                        <li><strong>Normalization:</strong> Reduce data redundancy</li>
+                        <li><strong>Implementation:</strong> Create actual tables</li>
+                    </ol>
+                    
+                    <h3>🔑 Key Concepts</h3>
+                    <ul>
+                        <li><strong>Primary Key:</strong> Unique identifier</li>
+                        <li><strong>Foreign Key:</strong> Reference to another table</li>
+                        <li><strong>Relationships:</strong> One-to-One, One-to-Many, Many-to-Many</li>
+                        <li><strong>Constraints:</strong> Data validation rules</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>🗄️ Our Job Portal Entities</h3>
+                    <div class="tech-card">
+                        <h4>👤 Users</h4>
+                        <p>id, email, password, name, user_type, created_at</p>
+                    </div>
+                    
+                    <div class="tech-card">
+                        <h4>💼 Jobs</h4>
+                        <p>id, title, description, company, location, salary, posted_by, created_at</p>
+                    </div>
+                    
+                    <div class="tech-card">
+                        <h4>📝 Applications</h4>
+                        <p>id, job_id, applicant_id, cover_letter, status, applied_at</p>
+                    </div>
+                    
+                    <h3>🔗 Relationships</h3>
+                    <ul>
+                        <li><strong>Users → Jobs:</strong> One-to-Many (Admin posts jobs)</li>
+                        <li><strong>Users → Applications:</strong> One-to-Many (User applies to jobs)</li>
+                        <li><strong>Jobs → Applications:</strong> One-to-Many (Job has many applications)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Development Environment Setup -->
+        <div class="slide">
+            <div class="slide-number">9/12</div>
+            <h1>Development Environment Setup</h1>
+            <h3>📋 Required Software Installation</h3>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-time">Step 1:</div>
+                    <strong>Node.js (v16 or higher)</strong>
+                    <p>Download from <a href="https://nodejs.org" target="_blank">nodejs.org</a> - Choose LTS version</p>
+                    <div class="code-block">node --version
+npm --version</div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-time">Step 2:</div>
+                    <strong>PostgreSQL (v12 or higher)</strong>
+                    <p>Download from <a href="https://postgresql.org" target="_blank">postgresql.org</a> - Remember your password!</p>
+                    <div class="code-block">psql --version</div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-time">Step 3:</div>
+                    <strong>Visual Studio Code</strong>
+                    <p>Download from <a href="https://code.visualstudio.com" target="_blank">code.visualstudio.com</a></p>
+                    <p><strong>Recommended Extensions:</strong> JavaScript (ES6), PostgreSQL, Thunder Client</p>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-time">Step 4:</div>
+                    <strong>Git & GitHub Account</strong>
+                    <p>Download Git from <a href="https://git-scm.com" target="_blank">git-scm.com</a></p>
+                    <p>Create account at <a href="https://github.com" target="_blank">github.com</a></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Project Structure Setup -->
+        <div class="slide">
+            <div class="slide-number">10/12</div>
+            <h1>Project Folder Structure</h1>
+            <div class="two-column">
+                <div>
+                    <h3>📁 Recommended Structure</h3>
+                    <div class="code-block">job-portal/
+├── backend/
+│   ├── config/
+│   │   └── database.js
+│   ├── routes/
+│   │   ├── auth.js
+│   │   ├── jobs.js
+│   │   └── applications.js
+│   ├── middleware/
+│   │   └── auth.js
+│   ├── models/
+│   ├── server.js
+│   └── package.json
+├── frontend/
+│   ├── public/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── pages/
+│   │   ├── utils/
+│   │   └── App.js
+│   └── package.json
+└── README.md</div>
+                </div>
+                <div>
+                    <h3>🚀 Let's Create It!</h3>
+                    <p><strong>Commands to run:</strong></p>
+                    <div class="code-block"># Create main project folder
+mkdir job-portal
+cd job-portal
+
+# Create backend structure
+mkdir backend
+cd backend
+npm init -y
+
+# Install backend dependencies
+npm install express cors dotenv bcrypt jsonwebtoken pg
+
+# Create frontend
+cd ..
+npx create-react-app frontend
+
+# Initialize Git repository
+git init
+git add .
+git commit -m "Initial project setup"</div>
+                    
+                    <div class="highlight">
+                        <strong>💡 Pro Tip:</strong> Always organize your code with clear folder structures. This makes collaboration easier and helps maintain clean architecture.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Testing Your Setup -->
+        <div class="slide">
+            <div class="slide-number">11/12</div>
+            <h1>Testing Your Installation</h1>
+            <div class="two-column">
+                <div>
+                    <h3>✅ Verification Checklist</h3>
+                    
+                    <h4>🟢 Node.js & NPM</h4>
+                    <div class="code-block">node --version
+# Should show: v16.x.x or higher
+
+npm --version
+# Should show: 8.x.x or higher</div>
+                    
+                    <h4>🐘 PostgreSQL</h4>
+                    <div class="code-block">psql --version
+# Should show: psql (PostgreSQL) 12.x or higher
+
+# Test connection
+psql -U postgres
+# Enter your password when prompted</div>
+                    
+                    <h4>⚛️ React</h4>
+                    <div class="code-block">cd frontend
+npm start
+# Should open browser at localhost:3000</div>
+                </div>
+                <div>
+                    <h3>🛠️ Basic Backend Test</h3>
+                    <p>Create a simple server to test everything works:</p>
+                    
+                    <div class="code-block">// backend/server.js
+const express = require('express');
+const app = express();
+const PORT = 5000;
+
+app.get('/api/test', (req, res) => {
+    res.json({ 
+        message: 'Server is working!',
+        timestamp: new Date().toISOString()
+    });
+});
+
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});</div>
+                    
+                    <div class="code-block"># Run the server
+cd backend
+node server.js
+
+# Test in browser: http://localhost:5000/api/test</div>
+                    
+                    <div class="highlight">
+                        <strong>Success!</strong> If you see JSON response, your setup is complete! 🎉
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Assignments & Next Steps -->
+        <div class="slide">
+            <div class="slide-number">12/12</div>
+            <h1>Assignments & Next Lecture</h1>
+            <div class="two-column">
+                <div>
+                    <h3>📝 Assignment for Next Class</h3>
+                    <ol>
+                        <li><strong>Complete Installation:</strong>
+                            <ul>
+                                <li>Install all required software</li>
+                                <li>Test each installation</li>
+                                <li>Create project folder structure</li>
+                            </ul>
+                        </li>
+                        <li><strong>Learn HTTP Basics:</strong>
+                            <ul>
+                                <li>Read about HTTP methods (GET, POST, PUT, DELETE)</li>
+                                <li>Understand HTTP status codes</li>
+                                <li>Research REST API principles</li>
+                            </ul>
+                        </li>
+                        <li><strong>GitHub Setup:</strong>
+                            <ul>
+                                <li>Create GitHub account if you don't have one</li>
+                                <li>Create new repository for job-portal project</li>
+                                <li>Push your initial project structure</li>
+                            </ul>
+                        </li>
+                    </ol>
+                </div>
+                <div>
+                    <h3>🔮 Next Lecture Preview</h3>
+                    <div class="highlight">
+                        <h4>Lecture 2: Database Design & PostgreSQL Setup</h4>
+                        <ul>
+                            <li>Database design principles</li>
+                            <li>Creating our job portal database</li>
+                            <li>Writing SQL scripts for tables</li>
+                            <li>Understanding relationships</li>
+                        </ul>
+                    </div>
+                    
+                    <h3>📚 Recommended Reading</h3>
+                    <ul>
+                        <li><strong>HTTP Methods:</strong> MDN Web Docs - HTTP Methods</li>
+                        <li><strong>REST APIs:</strong> RESTful Web Services Tutorial</li>
+                        <li><strong>Database Basics:</strong> Introduction to Relational Databases</li>
+                    </ul>
+                    
+                    <div style="text-align: center; margin-top: 30px;">
+                        <h2 style="color: #667eea; border: none;">Questions? 🤔</h2>
+                        <p style="font-size: 1.2em;">Let's discuss any installation issues or concepts!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="navigation">
+        <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">← Previous</button>
+        <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">Next →</button>
+    </div>
+
+    <!-- Slide Counter -->
+    <div class="slide-counter">
+        <span id="slideCounter">1 / 12</span>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function showSlide(n) {
+            // Hide all slides
+            slides.forEach(slide => slide.classList.remove('active'));
+            
+            // Show current slide
+            if (n >= totalSlides) currentSlide = 0;
+            if (n < 0) currentSlide = totalSlides - 1;
+            
+            slides[currentSlide].classList.add('active');
+            
+            // Update navigation buttons
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+            
+            // Update slide counter
+            document.getElementById('slideCounter').textContent = `${currentSlide + 1} / ${totalSlides}`;
+        }
+
+        function changeSlide(n) {
+            currentSlide += n;
+            showSlide(currentSlide);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+            if (e.key === 'Home') { currentSlide = 0; showSlide(currentSlide); }
+            if (e.key === 'End') { currentSlide = totalSlides - 1; showSlide(currentSlide); }
+        });
+
+        // Touch/swipe support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', function(e) {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', function(e) {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            const swipeThreshold = 100;
+            const swipeDistance = touchEndX - touchStartX;
+            
+            if (Math.abs(swipeDistance) > swipeThreshold) {
+                if (swipeDistance > 0) {
+                    changeSlide(-1); // Swipe right - previous slide
+                } else {
+                    changeSlide(1);  // Swipe left - next slide
+                }
+            }
+        }
+
+        // Initialize
+        showSlide(0);
+
+        // Auto-hide navigation on mobile after 3 seconds
+        let hideNavTimeout;
+        function resetHideNavTimeout() {
+            clearTimeout(hideNavTimeout);
+            document.querySelector('.navigation').style.opacity = '1';
+            document.querySelector('.slide-counter').style.opacity = '1';
+            
+            hideNavTimeout = setTimeout(() => {
+                if (window.innerWidth <= 768) {
+                    document.querySelector('.navigation').style.opacity = '0.3';
+                    document.querySelector('.slide-counter').style.opacity = '0.3';
+                }
+            }, 3000);
+        }
+
+        document.addEventListener('mousemove', resetHideNavTimeout);
+        document.addEventListener('touchstart', resetHideNavTimeout);
+        resetHideNavTimeout();
+    </script>
